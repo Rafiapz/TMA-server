@@ -29,8 +29,8 @@ const signupController = (req, res) => __awaiter(void 0, void 0, void 0, functio
         const result = yield userModel_1.default.create(value);
         if (result) {
             const token = (0, jwt_1.generateToken)({ email: result === null || result === void 0 ? void 0 : result.email, _id: result === null || result === void 0 ? void 0 : result._id });
-            res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true });
-            res.status(200).json({ status: 'success' });
+            // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+            res.status(200).json({ status: 'success', token });
         }
         else {
             throw new Error('Failed to create user');
@@ -59,8 +59,8 @@ const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function
             return;
         }
         const token = (0, jwt_1.generateToken)({ email: data === null || data === void 0 ? void 0 : data.email, _id: data === null || data === void 0 ? void 0 : data._id });
-        res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true });
-        res.status(200).json({ status: 'success' });
+        //res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+        res.status(200).json({ status: 'success', token });
     }
     catch (error) {
         console.log(error);
@@ -81,8 +81,8 @@ const loginWithGoogleController = (req, res) => __awaiter(void 0, void 0, void 0
             const existingUser = yield (userModel_1.default === null || userModel_1.default === void 0 ? void 0 : userModel_1.default.findOne({ email: email }));
             if (existingUser) {
                 const token = (0, jwt_1.generateToken)({ _id: existingUser._id, email: existingUser === null || existingUser === void 0 ? void 0 : existingUser.email });
-                res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true });
-                res.json({ status: 'success', userData: existingUser, }).status(200);
+                // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+                res.json({ status: 'success', userData: existingUser, token }).status(200);
             }
             else {
                 const googleData = response.data;
@@ -94,8 +94,8 @@ const loginWithGoogleController = (req, res) => __awaiter(void 0, void 0, void 0
                 const newUser = yield userModel_1.default.create(userData);
                 if (newUser) {
                     const token = (0, jwt_1.generateToken)({ _id: newUser._id, email: newUser === null || newUser === void 0 ? void 0 : newUser.email });
-                    res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true });
-                    res.status(200).json({ status: 'success', data: newUser }).status(200);
+                    // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+                    res.status(200).json({ status: 'success', data: newUser, token }).status(200);
                 }
             }
         }
@@ -122,7 +122,7 @@ const fetchUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.fetchUser = fetchUser;
 const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        res.cookie('userToken', '', { maxAge: 1, httpOnly: true, sameSite: "none", secure: true });
+        // res.cookie('userToken', '', { maxAge: 1, httpOnly: true, sameSite: "none", secure: true })
         res.status(200).json({ status: 'success' });
     }
     catch (error) {

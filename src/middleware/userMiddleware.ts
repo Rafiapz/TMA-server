@@ -13,10 +13,11 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
 
     try {
 
-        const userToken = req?.cookies?.userToken;
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
 
-        if (userToken) {
-            const user: any = verifyToken(userToken);
+        if (token) {
+            const user: any = verifyToken(token);
             req.user = user
             next();
         } else {

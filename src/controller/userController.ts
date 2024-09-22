@@ -19,8 +19,8 @@ export const signupController = async (req: Request, res: Response) => {
         const result: any = await Users.create(value)
         if (result) {
             const token = generateToken({ email: result?.email, _id: result?._id })
-            res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
-            res.status(200).json({ status: 'success' })
+            // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+            res.status(200).json({ status: 'success', token })
 
         } else {
             throw new Error('Failed to create user')
@@ -55,8 +55,8 @@ export const loginController = async (req: Request, res: Response) => {
         }
 
         const token = generateToken({ email: data?.email, _id: data?._id })
-        res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
-        res.status(200).json({ status: 'success' })
+        //res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+        res.status(200).json({ status: 'success', token })
     } catch (error: any) {
         console.log(error)
         res.status(error?.code).json({ status: 'error', message: error?.message })
@@ -80,8 +80,8 @@ export const loginWithGoogleController = async (req: Request, res: Response) => 
 
             if (existingUser) {
                 const token = generateToken({ _id: existingUser._id, email: existingUser?.email })
-                res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
-                res.json({ status: 'success', userData: existingUser, }).status(200)
+                // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+                res.json({ status: 'success', userData: existingUser, token }).status(200)
 
             } else {
                 const googleData = response.data
@@ -94,8 +94,8 @@ export const loginWithGoogleController = async (req: Request, res: Response) => 
                 const newUser = await Users.create(userData)
                 if (newUser) {
                     const token = generateToken({ _id: newUser._id, email: newUser?.email })
-                    res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
-                    res.status(200).json({ status: 'success', data: newUser }).status(200)
+                    // res.cookie('userToken', token, { maxAge: 1000 * 60 * 60 * 24, httpOnly: true, sameSite: "none", secure: true })
+                    res.status(200).json({ status: 'success', data: newUser, token }).status(200)
                 }
             }
 
@@ -125,7 +125,7 @@ export const logoutController = async (req: Request, res: Response) => {
 
     try {
 
-        res.cookie('userToken', '', { maxAge: 1, httpOnly: true, sameSite: "none", secure: true })
+        // res.cookie('userToken', '', { maxAge: 1, httpOnly: true, sameSite: "none", secure: true })
         res.status(200).json({ status: 'success' })
 
     } catch (error: any) {
